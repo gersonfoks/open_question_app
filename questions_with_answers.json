@@ -1,0 +1,39 @@
+{
+  "questions": [
+    {
+      "question": "What is the purpose of modeling collections of entities as tables in a relational database?",
+      "correct_answer": "The purpose is to record information about important objects and events from the real world.",
+      "wrong_answer": "The purpose is to organize data in a visually appealing manner.",
+      "almost_correct_answer": "The purpose is to organize and store data about entities in a structured manner.",
+      "paraphrased_answer": "The purpose is to store information about objects and events in a structured way."
+    },
+    {
+      "question": "How are entities represented in a relational database?",
+      "correct_answer": "Entities are represented as rows in tables, where each row represents a single instance of an entity.",
+      "wrong_answer": "Entities are represented as columns in tables, where each column represents a single instance of an entity.",
+      "almost_correct_answer": "Entities are represented as entries in tables, where each entry represents a single instance of an entity.",
+      "paraphrased_answer": "Entities are stored as records in tables, with each record representing a single instance of an entity."
+    },
+    {
+      "question": "What is the structure of a relational table?",
+      "correct_answer": "A relational table consists of rows and columns, with each row representing an entity instance and each column storing specific data of a particular datatype.",
+      "wrong_answer": "A relational table consists of cells and rows, with each cell representing an entity instance and each row storing specific data of a particular datatype.",
+      "almost_correct_answer": "A relational table consists of records and fields, with each record representing an entity instance and each field storing specific data of a particular datatype.",
+      "paraphrased_answer": "A relational table is composed of rows and columns, where each row holds data about an entity instance and each column stores specific information of a particular datatype."
+    },
+    {
+      "question": "Can all columns in a table have a value?",
+      "correct_answer": "No, not all columns need to have a value. Some columns may be empty or NULL for certain rows.",
+      "wrong_answer": "Yes, all columns in a table must have a value. It is a requirement of a relational database.",
+      "almost_correct_answer": "All columns in a table should have a value, but some columns may be empty or NULL for certain rows.",
+      "paraphrased_answer": "While it's recommended for all columns in a table to have a value, it's possible for some columns to be empty or NULL in certain rows."
+    },
+    {
+      "question": "What determines the datatype of a column in a table?",
+      "correct_answer": "The datatype of a column is determined based on the type of data it is intended to store, such as character-based data, numeric data, or date/time values.",
+      "wrong_answer": "The datatype of a column is determined randomly by the database system.",
+      "almost_correct_answer": "The datatype of a column is determined by the database administrator based on personal preference.",
+      "paraphrased_answer": "The datatype of a column is determined according to the nature of the data it is meant to hold, such as text, numbers, or date/time values."
+    }
+  ]
+}
