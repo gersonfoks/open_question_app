@@ -5,7 +5,24 @@ from pydantic import BaseModel
 
 from grading_model import GradeModel
 
+from fastapi.middleware.cors import CORSMiddleware
+
+origins = [
+
+    "http://localhost:5173",
+]
+
+
+
 app = fastapi.FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Initialize model
 grading_model = GradeModel()
@@ -18,7 +35,7 @@ class GradeRequest(BaseModel):
 
 
 class GradeResponse(BaseModel):
-    simularity: float
+    similarity: float
     correct: bool
 
 
@@ -28,6 +45,6 @@ async def grade(grade_request: GradeRequest) -> Any:
     question = grade_request["question"]
     correct_answer = grade_request["correct_answer"]
     your_answer = grade_request["your_answer"]
-    simularity, correct = grading_model.grade(question, correct_answer, your_answer)
+    similarity, correct = grading_model.grade(question, correct_answer, your_answer)
 
-    return {"simularity": simularity, "correct": correct}
+    return {"similarity": similarity, "correct": correct}

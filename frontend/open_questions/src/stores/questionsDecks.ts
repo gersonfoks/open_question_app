@@ -1,9 +1,14 @@
 import {defineStore} from 'pinia'
 
 
-export interface Question {
+export class Question {
     question: string;
     answer: string;
+
+    constructor(question: string, answer: string) {
+        this.question = question;
+        this.answer = answer;
+    }
 
 }
 
@@ -20,43 +25,54 @@ export class QuestionDeck {
 
 }
 
-const demoQuestionDeck: QuestionDeck = {
-    id: 1,
-    name: "Demo Deck",
-    questions: [
-        {
-            question: "What is the meaning of life?",
-            answer: "42"
-        },
-        {
-            question: "What is the capital of Germany?",
-            answer: "Berlin"
-        },
-        {
-            question: "Why would one use a state management library?",
-            answer: "To avoid prop drilling"
-        }]
-}
+const demoQuestionDeck: QuestionDeck = new QuestionDeck(
+    1,
+    "Demo Deck 2",
+    [
+        new Question(
+            "What is the meaning of life?",
+            "42"
+        ),
+        new Question(
+            "What is the capital of Germany?",
+            "Berlin"
+        ),
+        new Question(
+            "Why would one use a state management library?",
+            "To avoid prop drilling"
+        ),
+        new Question(
+            "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid aspernatur corporis cumque laborum libero odit sed tempore unde. Molestias, repudiandae.",
+            "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid aspernatur corporis cumque laborum libero odit sed tempore unde. Molestias, repudiandae."
+        ),
+
+    ]
+)
 
 
-const demoQuestionDeck2: QuestionDeck = {
-    id: 2,
-    name: "Demo Deck 2",
-    questions: [
-        {
-            question: "What is the meaning of life?",
-            answer: "42"
-        },
-        {
-            question: "What is the capital of Germany?",
-            answer: "Berlin"
-        },
-        {
-            question: "Why would one use a state management library?",
-            answer: "To avoid prop drilling"
-        }]
+const demoQuestionDeck2: QuestionDeck = new QuestionDeck(
+    2,
+    "Demo Deck 2",
+    [
+        new Question(
+            "What is the meaning of life?",
+            "42"
+        ),
+        new Question(
+            "What is the capital of Germany?",
+            "Berlin"
+        ),
+        new Question(
+            "Why would one use a state management library?",
+            "To avoid prop drilling"
+        ),
+        new Question(
+            "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid aspernatur corporis cumque laborum libero odit sed tempore unde. Molestias, repudiandae.",
+            "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid aspernatur corporis cumque laborum libero odit sed tempore unde. Molestias, repudiandae."
+        ),
 
-}
+    ]
+)
 
 
 export const useQuestionDeckStore = defineStore('questionDeck', {
@@ -64,19 +80,29 @@ export const useQuestionDeckStore = defineStore('questionDeck', {
         questionDecks: [] as QuestionDeck[],
     }),
     actions: {
-        fetchQuestionDeck() {
+        async fetchQuestionDeck() {
             return new Promise((resolve, reject) => {
                 setTimeout(() => {
                     this.questionDecks = [demoQuestionDeck, demoQuestionDeck2]
                     resolve(true)
-                }, 1000)
+                }, 10)
+            })
+        },
+        async getDeckById(questionDeckId: number) {
+            return new Promise((resolve, reject) => {
+                this.fetchQuestionDeck().then(() => {
+                        resolve(this.questionDecks.find((questionDeck) => {
+
+                            return questionDeck.id == questionDeckId
+
+                        }))
+                    }
+                )
             })
         }
+
+
     },
 
-    getters: {
-        getDeckById: (state) => {
-            return (questionDeckId: number) => state.questionDecks.find((questionDeck) => questionDeck.id === questionDeckId)
-        },
-    },
+
 })
