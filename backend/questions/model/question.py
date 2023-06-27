@@ -22,6 +22,7 @@ class Question(BaseModel):
 
 class QuestionDeck(BaseModel):
     name: str
+    description: str
     questions: List[Question] = []
 
     def __repr__(self):

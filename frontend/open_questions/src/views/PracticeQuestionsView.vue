@@ -24,7 +24,7 @@ export default {
         }
     },
     mounted() {
-        this.questionDeckStore.getDeckById(this.id).then((questionDeck: QuestionDeck) => {
+        this.questionDeckStore.getDeckByName(this.id).then((questionDeck: QuestionDeck) => {
             this.questionDeck = questionDeck
 
             this.questions = _.shuffle(questionDeck.questions)

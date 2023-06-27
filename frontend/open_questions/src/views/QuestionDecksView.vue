@@ -1,59 +1,87 @@
-<script setup lang="ts">
+<script lang="ts">
 
-import 'bootstrap/dist/css/bootstrap.min.css'
-import QuestionDeckCard from "@/components/QuestionDeckCard.vue";
 import {QuestionDeck, useQuestionDeckStore} from "@/stores/questionsDecks";
 import {storeToRefs} from "pinia";
-import {reactive, ref} from "vue";
+import {reactive} from "vue";
+import QuestionDeckCard from "@/components/QuestionDeckCard.vue";
+import AddQuestionDeckComponent from "@/components/AddQuestionDeckComponent.vue";
 
-const questionDeckStore = useQuestionDeckStore()
+export default {
+  computed: {
+    QuestionDeck() {
+      return QuestionDeck
+    }
+  },
+  components: {QuestionDeckCard, AddQuestionDeckComponent},
+  setup() {
 
-const {questionDecks}= storeToRefs(questionDeckStore)
+    const questionDeckStore = useQuestionDeckStore()
 
-
-const state = reactive({
-    questionDeckLoaded: false
-})
-
-questionDeckStore.fetchQuestionDeck().then(() => {
-    state.questionDeckLoaded = true
-
-})
-console.log(questionDeckStore.fetchQuestionDeck())
+    const {questionDecks} = storeToRefs(questionDeckStore)
 
 
-</script>
+    const state = reactive({
+      questionDeckLoaded: false
+    })
 
-<script lang="ts">
+    questionDeckStore.getQuestionDecks().then(() => {
+      state.questionDeckLoaded = true
+
+    })
+
+    return {
+      state,
+      questionDecks,
+      questionDeckStore
+
+    }
+  },
+  methods: {
+    deleteDeck(name: string) {
+
+      this.questionDeckStore.deleteQuestionDeck(name)
+    }
+  }
+}
 
 
 </script>
 
 <template>
 
-    <div class="py-5">
-        <h3 class="text-center">
-            Your question decks
-        </h3>
-    </div>
+  <div class="py-5">
+    <h3 class="text-center">
+      Your question decks
+    </h3>
+  </div>
 
+  <div class="container">
 
-    <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-3">
+        <AddQuestionDeckComponent></AddQuestionDeckComponent>
+      </div>
 
+      <div class="col-4">
         <div v-if="!state.questionDeckLoaded">
-            Loading...
+          Loading...
         </div>
+
 
         <div v-else v-for="questionDeck in questionDecks" :key="questionDeck.id"
-             class="row my-3 justify-content-center">
-            <div class="col-4">
-                <QuestionDeckCard :questionDeck="questionDeck as QuestionDeck">
-                </QuestionDeckCard>
-            </div>
+             class="row my-3">
+          <div>
+            <QuestionDeckCard :questionDeck="questionDeck as QuestionDeck" @deleteDeck="deleteDeck">
+            </QuestionDeckCard>
+          </div>
         </div>
+      </div>
 
 
     </div>
+
+
+  </div>
 
 
 </template>

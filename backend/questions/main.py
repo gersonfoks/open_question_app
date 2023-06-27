@@ -6,8 +6,8 @@ import fastapi
 from fastapi.middleware.cors import CORSMiddleware
 
 from model.question import Question, QuestionDeck, GetQuestionDecksResponse
-from requests_responses import AddQuestionResponse, AddQuestionDeckRequest, AddQuestionRequest
-
+from requests_responses import AddQuestionResponse, AddQuestionDeckRequest, AddQuestionRequest, \
+    DeleteQuestionDeckResponse, DeleteQuestionDeckRequest
 
 # Load the database collection
 from utils import collection
@@ -29,8 +29,9 @@ app.add_middleware(
 
 @app.post('/create_deck', response_model=AddQuestionResponse)
 async def create_deck(request: AddQuestionDeckRequest) -> Any:
+    print(request)
     request = request.dict()
-    question_deck = QuestionDeck(name=request["name"])
+    question_deck = QuestionDeck(name=request["name"], description=request["description"])
     collection.insert_one(question_deck.dict())
 
     return {"body": "question deck created"}
@@ -54,3 +55,11 @@ async def get_question_decks() -> Any:
     question_decks = [QuestionDeck(**question_deck) for question_deck in question_decks]
 
     return {"question_decks": question_decks}
+
+
+@app.delete('/delete_question_deck', response_model=DeleteQuestionDeckResponse)
+async def get_question_decks(delete_request: DeleteQuestionDeckRequest) -> Any:
+    collection.delete_one({"name": delete_request.name})
+
+    return {"body": f"Question deck {delete_request.name} deleted"}
+

@@ -3,9 +3,18 @@ from pydantic import BaseModel
 
 class AddQuestionDeckRequest(BaseModel):
     name: str
+    description: str
 
 
 class AddQuestionDeckResponse(BaseModel):
+    body: str
+
+
+class DeleteQuestionDeckRequest(BaseModel):
+    name: str
+
+
+class DeleteQuestionDeckResponse(BaseModel):
     body: str
 
 

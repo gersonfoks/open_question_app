@@ -1,4 +1,5 @@
 import {defineStore} from 'pinia'
+import {QuestionService} from "@/service/QuestionDeckService";
 
 
 export class Question {
@@ -13,96 +14,84 @@ export class Question {
 }
 
 export class QuestionDeck {
-    id: number
     name: string;
+    description: string;
     questions: Question[];
 
-    constructor(id: number, name: string, questions: Question[]) {
-        this.id = id;
+    constructor(name: string, description: string, questions: Question[]) {
+
         this.name = name;
+        this.description = description;
         this.questions = questions;
     }
 
 }
 
-const demoQuestionDeck: QuestionDeck = new QuestionDeck(
-    1,
-    "Demo Deck 2",
-    [
-        new Question(
-            "What is the meaning of life?",
-            "42"
-        ),
-        new Question(
-            "What is the capital of Germany?",
-            "Berlin"
-        ),
-        new Question(
-            "Why would one use a state management library?",
-            "To avoid prop drilling"
-        ),
-        new Question(
-            "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid aspernatur corporis cumque laborum libero odit sed tempore unde. Molestias, repudiandae.",
-            "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid aspernatur corporis cumque laborum libero odit sed tempore unde. Molestias, repudiandae."
-        ),
-
-    ]
-)
-
-
-const demoQuestionDeck2: QuestionDeck = new QuestionDeck(
-    2,
-    "Demo Deck 2",
-    [
-        new Question(
-            "What is the meaning of life?",
-            "42"
-        ),
-        new Question(
-            "What is the capital of Germany?",
-            "Berlin"
-        ),
-        new Question(
-            "Why would one use a state management library?",
-            "To avoid prop drilling"
-        ),
-        new Question(
-            "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid aspernatur corporis cumque laborum libero odit sed tempore unde. Molestias, repudiandae.",
-            "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid aspernatur corporis cumque laborum libero odit sed tempore unde. Molestias, repudiandae."
-        ),
-
-    ]
-)
-
 
 export const useQuestionDeckStore = defineStore('questionDeck', {
     state: () => ({
         questionDecks: [] as QuestionDeck[],
+        questionDeckService: new QuestionService('http://localhost:8001')
     }),
     actions: {
-        async fetchQuestionDeck() {
+        async getQuestionDecks() {
             return new Promise((resolve, reject) => {
-                setTimeout(() => {
-                    this.questionDecks = [demoQuestionDeck, demoQuestionDeck2]
+
+                this.questionDeckService.getQuestionDecks().then((questionDecks) => {
+                    this.questionDecks = questionDecks["question_decks"].map((questionDeck: any) => {
+                        return new QuestionDeck(questionDeck["name"], questionDeck["description"],
+                            questionDeck["questions"].map((question: any) => {
+                                return new Question(question["question"], question["answer"])
+                            }))
+                    })
+
+
                     resolve(true)
-                }, 10)
+                }).catch((error) => {
+                    console.log(error)
+                    reject(error)
+                })
             })
         },
-        async getDeckById(questionDeckId: number) {
+        async getDeckByName(name: string) {
             return new Promise((resolve, reject) => {
-                this.fetchQuestionDeck().then(() => {
+                this.getQuestionDecks().then(() => {
                         resolve(this.questionDecks.find((questionDeck) => {
 
-                            return questionDeck.id == questionDeckId
+                            return questionDeck.name == name
 
                         }))
                     }
                 )
             })
+        },
+
+        async createQuestionDeck(name: string, description: string ) {
+            return new Promise((resolve, reject) => {
+                this.questionDeckService.createQuestionDeck(name, description).then((questionDeck) => {
+                    this.questionDecks.push(new QuestionDeck(name, description, []))
+                    resolve(true)
+                }).catch((error) => {
+                    console.log(error)
+                    reject(error)
+                })
+            })
+        },
+
+        async deleteQuestionDeck(name: string) {
+            return new Promise((resolve, reject) => {
+                this.questionDeckService.deleteQuestionDeck(name).then(() => {
+                    this.questionDecks = this.questionDecks.filter((questionDeck) => {
+                        return questionDeck.name != name
+                    })
+                    resolve(true)
+                }).catch((error) => {
+                    console.log(error)
+                    reject(error)
+                })
+            })
         }
-
-
-    },
+    }
 
 
 })
