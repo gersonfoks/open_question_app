@@ -1,9 +1,14 @@
+from typing import Optional
+
 from pydantic import BaseModel
+
+from model.question import Question
 
 
 class AddQuestionDeckRequest(BaseModel):
     name: str
     description: str
+    questions: Optional[list[Question]] = []
 
 
 class AddQuestionDeckResponse(BaseModel):

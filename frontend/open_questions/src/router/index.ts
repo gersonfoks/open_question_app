@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import QuestionDecksView from '../views/QuestionDecksView.vue'
 import PracticeQuestionsView from '../views/PracticeQuestionsView.vue'
+import QuestionDeckEditorView from "@/views/questionDeckEditorView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -14,6 +15,12 @@ const router = createRouter({
       path: '/practice/:id',
       name: 'practice',
       component: PracticeQuestionsView,
+      props: true
+    },
+    {
+      path: '/edit/',
+      name: 'edit',
+      component: QuestionDeckEditorView,
       props: true
     },
     // {

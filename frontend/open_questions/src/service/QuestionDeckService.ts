@@ -1,3 +1,5 @@
+import {Question} from "@/stores/questionsDecks";
+
 export class QuestionService {
     question_deck_base_route: string;
 
@@ -25,7 +27,7 @@ export class QuestionService {
         })
     }
 
-    async createQuestionDeck(name: string, description: string): Promise<any> {
+    async createQuestionDeck(name: string, description: string,  questions: Question[] = [] ): Promise<any> {
 
         return new Promise((resolve, reject) => {
             fetch(this.question_deck_base_route + '/create_deck', {
@@ -36,7 +38,13 @@ export class QuestionService {
                 },
                 body: JSON.stringify({
                     name: name,
-                    description: description
+                    description: description,
+                    questions: questions.map((question)  => {
+                        return {
+                            question: question.question,
+                            correct_answer: question.answer
+                        }
+                    })
                 })
             })
                 .then(response => {

@@ -68,7 +68,7 @@ export default {
         </div>
 
 
-        <div v-else v-for="questionDeck in questionDecks" :key="questionDeck.id"
+        <div v-else v-for="questionDeck in questionDecks" :key="questionDeck.name"
              class="row my-3">
           <div>
             <QuestionDeckCard :questionDeck="questionDeck as QuestionDeck" @deleteDeck="deleteDeck">

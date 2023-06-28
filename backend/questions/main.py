@@ -31,7 +31,9 @@ app.add_middleware(
 async def create_deck(request: AddQuestionDeckRequest) -> Any:
     print(request)
     request = request.dict()
-    question_deck = QuestionDeck(name=request["name"], description=request["description"])
+    question_deck = QuestionDeck(name=request["name"], description=request["description"],
+                                 questions=request["questions"]
+                                 )
     collection.insert_one(question_deck.dict())
 
     return {"body": "question deck created"}

@@ -66,9 +66,9 @@ export const useQuestionDeckStore = defineStore('questionDeck', {
             })
         },
 
-        async createQuestionDeck(name: string, description: string ) {
+        async createQuestionDeck(name: string, description: string, questions: Question[] = [] ) {
             return new Promise((resolve, reject) => {
-                this.questionDeckService.createQuestionDeck(name, description).then((questionDeck) => {
+                this.questionDeckService.createQuestionDeck(name, description, questions).then((questionDeck) => {
                     this.questionDecks.push(new QuestionDeck(name, description, []))
                     resolve(true)
                 }).catch((error) => {
