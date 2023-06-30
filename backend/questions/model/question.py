@@ -1,5 +1,4 @@
 import datetime
-from enum import Enum
 from typing import List, Optional
 
 from pydantic import BaseModel
@@ -13,20 +12,18 @@ class Answer(BaseModel):
 
 class Question(BaseModel):
     question: str
-    correct_answer: str
+    answer: str
     your_answers: List[Answer] = []
 
     def __repr__(self):
-        return f"question: {self.question} - answer: {self.correct_answer}"
+        return f"question: {self.question} - answer: {self.answer}"
 
 
 class QuestionDeck(BaseModel):
     name: str
     description: str
-    questions: List[Question] = []
+    # The ids of the questions in the question deck
+    question_ids: List[str] = []
 
     def __repr__(self):
         return f"deck: {self.name}"
-
-class GetQuestionDecksResponse(BaseModel):
-    question_decks: List[QuestionDeck]

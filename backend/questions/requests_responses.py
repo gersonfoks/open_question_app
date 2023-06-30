@@ -1,8 +1,8 @@
-from typing import Optional
+from typing import Optional, List
 
 from pydantic import BaseModel
 
-from model.question import Question
+from model.question import Question, QuestionDeck, Answer
 
 
 class AddQuestionDeckRequest(BaseModel):
@@ -23,11 +23,7 @@ class DeleteQuestionDeckResponse(BaseModel):
     body: str
 
 
-class AddQuestionRequest(BaseModel):
-    question: str
-    correct_answer: str
-    question_deck_name: str
 
 
-class AddQuestionResponse(BaseModel):
-    body: str
+class GetQuestionDecksResponse(BaseModel):
+    question_decks: List[QuestionDeck]

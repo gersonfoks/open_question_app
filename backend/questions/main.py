@@ -5,9 +5,9 @@ import fastapi
 
 from fastapi.middleware.cors import CORSMiddleware
 
-from model.question import Question, QuestionDeck, GetQuestionDecksResponse
+from model.question import Question, QuestionDeck
 from requests_responses import AddQuestionResponse, AddQuestionDeckRequest, AddQuestionRequest, \
-    DeleteQuestionDeckResponse, DeleteQuestionDeckRequest
+    DeleteQuestionDeckResponse, DeleteQuestionDeckRequest, GetQuestionDecksResponse
 
 # Load the database collection
 from utils import collection
