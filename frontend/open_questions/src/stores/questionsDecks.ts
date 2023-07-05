@@ -3,6 +3,7 @@ import {QuestionService} from "@/service/QuestionDeckService";
 
 
 export class Question {
+    id: string;
     question: string;
     answer: string;
 
@@ -14,12 +15,13 @@ export class Question {
 }
 
 export class QuestionDeck {
+    id: string;
     name: string;
     description: string;
     questions: Question[];
 
-    constructor(name: string, description: string, questions: Question[]) {
-
+    constructor(id: string, name: string, description: string, questions: Question[]) {
+        this.id = id;
         this.name = name;
         this.description = description;
         this.questions = questions;
@@ -38,14 +40,11 @@ export const useQuestionDeckStore = defineStore('questionDeck', {
             return new Promise((resolve, reject) => {
 
                 this.questionDeckService.getQuestionDecks().then((questionDecks) => {
-                    this.questionDecks = questionDecks["question_decks"].map((questionDeck: any) => {
-                        return new QuestionDeck(questionDeck["name"], questionDeck["description"],
-                            questionDeck["questions"].map((question: any) => {
-                                return new Question(question["question"], question["answer"])
-                            }))
+
+                    this.questionDecks = questionDecks["decks"].map((questionDeck: any) => {
+                        return new QuestionDeck(questionDeck["id"], questionDeck["name"], questionDeck["description"], questionDeck["question_ids"]
+                        )
                     })
-
-
                     resolve(true)
                 }).catch((error) => {
                     console.log(error)
@@ -53,12 +52,12 @@ export const useQuestionDeckStore = defineStore('questionDeck', {
                 })
             })
         },
-        async getDeckByName(name: string) {
+        async getDeckById(id: string) {
             return new Promise((resolve, reject) => {
                 this.getQuestionDecks().then(() => {
                         resolve(this.questionDecks.find((questionDeck) => {
 
-                            return questionDeck.name == name
+                            return questionDeck.id == id
 
                         }))
                     }
@@ -66,10 +65,18 @@ export const useQuestionDeckStore = defineStore('questionDeck', {
             })
         },
 
-        async createQuestionDeck(name: string, description: string, questions: Question[] = [] ) {
+        async getQuestionsById(ids: string[]) {
             return new Promise((resolve, reject) => {
-                this.questionDeckService.createQuestionDeck(name, description, questions).then((questionDeck) => {
-                    this.questionDecks.push(new QuestionDeck(name, description, []))
+                this.questionDeckService.getQuestionsByIds(ids).then((questions) => {
+                    resolve(questions)
+                })
+            })
+        },
+
+        async createQuestionDeck(name: string, description: string, questions: Question[] = []) {
+            return new Promise((resolve, reject) => {
+                this.questionDeckService.createQuestionDeck(name, description, questions).then((id) => {
+                    this.questionDecks.push(new QuestionDeck(id, name, description, questions))
                     resolve(true)
                 }).catch((error) => {
                     console.log(error)
@@ -78,11 +85,11 @@ export const useQuestionDeckStore = defineStore('questionDeck', {
             })
         },
 
-        async deleteQuestionDeck(name: string) {
+        async deleteQuestionDeck(id: string) {
             return new Promise((resolve, reject) => {
-                this.questionDeckService.deleteQuestionDeck(name).then(() => {
+                this.questionDeckService.deleteQuestionDeck(id).then(() => {
                     this.questionDecks = this.questionDecks.filter((questionDeck) => {
-                        return questionDeck.name != name
+                        return questionDeck.id != id
                     })
                     resolve(true)
                 }).catch((error) => {
@@ -90,7 +97,20 @@ export const useQuestionDeckStore = defineStore('questionDeck', {
                     reject(error)
                 })
             })
+        },
+
+        async addUserAnswer(questionId: string, answer: string, correct: boolean) {
+            return new Promise((resolve, reject) => {
+                this.questionDeckService.addUserAnswer(questionId, answer, correct).then(() => {
+                    resolve(true)
+                }).catch((error) => {
+                    console.log(error)
+                    reject(error)
+                })
+            })
         }
+
+
     }
 
 

@@ -12,7 +12,7 @@ export default {
       return QuestionDeck
     }
   },
-  components: {QuestionDeckCard, AddQuestionDeckComponent},
+  components: {QuestionDeckCard},
   setup() {
 
     const questionDeckStore = useQuestionDeckStore()
@@ -58,15 +58,20 @@ export default {
   <div class="container">
 
     <div class="row justify-content-center">
-      <div class="col-3">
-        <AddQuestionDeckComponent></AddQuestionDeckComponent>
-      </div>
 
       <div class="col-4">
+
+
+        <router-link to="/edit" class="btn btn-success mx-1">Create a new deck</router-link>
+
+
         <div v-if="!state.questionDeckLoaded">
           Loading...
         </div>
 
+        <div v-if="state.questionDeckLoaded && questionDecks.length === 0">
+          No questions decks, please create one
+        </div>
 
         <div v-else v-for="questionDeck in questionDecks" :key="questionDeck.name"
              class="row my-3">

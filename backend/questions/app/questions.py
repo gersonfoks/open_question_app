@@ -32,6 +32,28 @@ async def add_question(question_request: CreateQuestionRequest) -> Any:
     return {"id": str(response.inserted_id)}
 
 
+# Create multiple questions add once
+class CreateQuestionsRequest(BaseModel):
+    questions: List[CreateQuestionRequest]
+
+
+class CreateQuestionsResponse(BaseModel):
+    ids: List[str]
+
+
+
+
+@router.post('/question/create_questions', response_model=CreateQuestionsResponse)
+async def add_questions(questions_request: CreateQuestionsRequest) -> Any:
+    questions_request = questions_request.dict()
+
+    questions = [Question(**question) for question in questions_request["questions"]]
+
+    response = global_state.question_collection.insert_many([question.dict() for question in questions])
+
+    return {"ids": [str(id) for id in response.inserted_ids]}
+
+
 class DeleteQuestionRequest(BaseModel):
     id: str
 
@@ -62,7 +84,7 @@ class AddAnswerResponse(BaseModel):
 
 
 @router.post('/question/add_answer', response_model=AddAnswerResponse)
-async def delete_question(add_answer_request: AddAnswerRequest) -> Any:
+async def add_answer(add_answer_request: AddAnswerRequest) -> Any:
     add_answer_request = add_answer_request.dict()
 
     id = add_answer_request["question_id"]
@@ -84,11 +106,11 @@ class GetQuestionsResponse(BaseModel):
 
 
 @router.post('/question/get_questions', response_model=GetQuestionsResponse)
-async def delete_question(request: GetQuestionsRequest) -> Any:
+async def get_questions(request: GetQuestionsRequest) -> Any:
     request = request.dict()
 
     # Add a timestamp
     ids = [ObjectId(id) for id in request["question_ids"]]
-    result = global_state.question_collection.find({"_id": {"$in": ids},})
+    result = global_state.question_collection.find({"_id": {"$in": ids}, })
 
-    return {"questions": [Question(**question) for question in result]}
+    return {"questions": [Question(id=str(question["_id"]), **question) for question in result]}

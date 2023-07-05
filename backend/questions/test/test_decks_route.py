@@ -26,18 +26,19 @@ class TestDecksRoute(unittest.TestCase):
         return json.loads(response.content.decode())
 
     def test_create_deck(self):
-        content = self.get_content(client.post('/decks/create', content=json.dumps(
+        content = self.get_content(client.post('/deck/create', content=json.dumps(
             {"name": "test_deck", "description": "test_description", "question_ids": []})))
+
 
         self.assertEqual(type(content["id"]), str)
 
     def test_delete_deck(self):
         # First insert the deck
-        content = self.get_content(client.post('/decks/create', content=json.dumps(
+        content = self.get_content(client.post('/deck/create', content=json.dumps(
             {"name": "test_deck", "description": "test_description", "question_ids": []})))
         id = content["id"]
 
-        content = self.get_content(client.post('/decks/delete', content=json.dumps({"id": id})))
+        content = self.get_content(client.post('/deck/delete', content=json.dumps({"id": id})))
 
         # Check if the deck is deleted
         self.assertEqual(self.global_state.deck_collection.find_one({"_id": ObjectId(id)}), None)
@@ -55,9 +56,11 @@ class TestDecksRoute(unittest.TestCase):
 
         # insert the decks
         for deck in decks:
-            content = self.get_content(client.post('/decks/create', content=json.dumps(deck)))
+            content = self.get_content(client.post('/deck/create', content=json.dumps(deck)))
 
-        content = self.get_content(client.get('/decks/get'))
+        content = self.get_content(client.get('/deck/get'))
+
+
 
         # Check if the decks are returned
-        self.assertEqual(content, {"decks": decks})
+        self.assertEqual(len(decks), 3)

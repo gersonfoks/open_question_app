@@ -20,7 +20,11 @@ export default {
       })
     },
     createDeck() {
-      this.questionDeckStore.createQuestionDeck(this.name, this.description, this.questions)
+      this.questionDeckStore.createQuestionDeck(this.name, this.description, this.questions).then(
+          () => {
+            this.$router.push({name: "home"})
+          }
+      )
 
     }
   },
@@ -92,6 +96,8 @@ export default {
       <button type="button" class="btn btn-primary my-3" @click="createDeck">
         Create deck
       </button>
+
+      <router-link to="/" class="btn btn-danger mx-1">Cancel</router-link>
 
 
     </form>
